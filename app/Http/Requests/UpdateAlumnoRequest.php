@@ -21,12 +21,19 @@ class UpdateAlumnoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $alumnoId = $this->route('alumno')->id;
+        $alumno = $this->route('alumno');
+        $alumnoId = $alumno->id;
+        $userId = $alumno->user_id;
 
         return [
             'nombre' => 'sometimes|required|string|max:255',
             'telefono' => 'sometimes|required|string|unique:alumnos,telefono,' . $alumnoId,
-            'email' => 'nullable|email|unique:alumnos,email,' . $alumnoId . '|unique:users,email',
+            'email' => [
+                'nullable',
+                'email',
+                'unique:alumnos,email,' . $alumnoId,
+                'unique:users,email,' . ($userId ?: 'NULL'),
+            ],
             'estado' => 'sometimes|required|in:activo,suspendido,bloqueado',
             'saldo_clases' => 'sometimes|required|integer',
         ];

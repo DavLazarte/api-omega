@@ -33,6 +33,10 @@ class DocenteController extends Controller
             $query->where('estado', $request->estado);
         }
 
+        if ($request->boolean('all')) {
+            return response()->json($query->get());
+        }
+
         return response()->json($query->paginate($request->per_page ?? 15));
     }
 

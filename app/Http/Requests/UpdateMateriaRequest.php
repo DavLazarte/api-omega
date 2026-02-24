@@ -16,8 +16,9 @@ class UpdateMateriaRequest extends FormRequest
         $materiaId = $this->route('materia')->id;
 
         return [
-            'nombre' => 'sometimes|required|string|max:255|unique:materias,nombre,' . $materiaId,
-            'nivel' => 'sometimes|required|in:secundario,universitario',
+            'nombre' => 'sometimes|required|string|max:255',
+            'institucion_id' => 'sometimes|required|exists:instituciones,id',
+            'nivel_id' => 'sometimes|required|exists:niveles,id',
             'duracion_minutos' => 'sometimes|required|integer|min:1',
         ];
     }
@@ -26,9 +27,10 @@ class UpdateMateriaRequest extends FormRequest
     {
         return [
             'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.unique' => 'Ya existe una materia con este nombre.',
-            'nivel.required' => 'El nivel es obligatorio.',
-            'nivel.in' => 'El nivel seleccionado no es válido.',
+            'institucion_id.required' => 'La institución es obligatoria.',
+            'institucion_id.exists' => 'La institución seleccionada no es válida.',
+            'nivel_id.required' => 'El nivel académico es obligatorio.',
+            'nivel_id.exists' => 'El nivel seleccionado no es válido.',
             'duracion_minutos.required' => 'La duración es obligatoria.',
             'duracion_minutos.min' => 'La duración debe ser mayor a 0.',
         ];

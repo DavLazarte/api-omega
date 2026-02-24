@@ -11,7 +11,7 @@ class MateriaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Materia::query();
+        $query = Materia::with(['institucion', 'academicLevel']);
 
         if ($request->has('search')) {
             $query->where('nombre', 'like', "%{$request->search}%");
@@ -31,7 +31,17 @@ class MateriaController extends Controller
 
     public function store(StoreMateriaRequest $request)
     {
-        $materia = Materia::create($request->validated());
+        $data = $request->validated();
+
+        // Sync legacy nivel field for backward compatibility
+        if (isset($data['nivel_id'])) {
+            $nivel = \App\Models\Nivel::find($data['nivel_id']);
+            if ($nivel) {
+                $data['nivel'] = $nivel->nombre;
+            }
+        }
+
+        $materia = Materia::create($data);
 
         return response()->json([
             'message' => 'Materia creada exitosamente',
@@ -46,7 +56,17 @@ class MateriaController extends Controller
 
     public function update(UpdateMateriaRequest $request, Materia $materia)
     {
-        $materia->update($request->validated());
+        $data = $request->validated();
+
+        // Sync legacy nivel field for backward compatibility
+        if (isset($data['nivel_id'])) {
+            $nivel = \App\Models\Nivel::find($data['nivel_id']);
+            if ($nivel) {
+                $data['nivel'] = $nivel->nombre;
+            }
+        }
+
+        $materia->update($data);
 
         return response()->json([
             'message' => 'Materia actualizada exitosamente',

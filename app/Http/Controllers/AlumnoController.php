@@ -34,6 +34,10 @@ class AlumnoController extends Controller
             $query->where('estado', $request->estado);
         }
 
+        if ($request->boolean('all')) {
+            return response()->json($query->get());
+        }
+
         return response()->json($query->paginate($request->per_page ?? 15));
     }
 
@@ -71,7 +75,22 @@ class AlumnoController extends Controller
      */
     public function show(Alumno $alumno)
     {
-        return response()->json($alumno->load('user'));
+        $alumno->load([
+            'user',
+            'grupos' => function ($q) {
+                $q->with(['materia.institucion', 'docente', 'aula'])
+                    ->orderBy('fecha', 'desc');
+            },
+            'packsClases' => function ($q) {
+                $q->orderBy('created_at', 'desc');
+            },
+            'solicitudesMaterias' => function ($q) {
+                $q->with(['materia', 'tema'])
+                    ->orderBy('created_at', 'desc');
+            },
+        ]);
+
+        return response()->json($alumno);
     }
 
     /**

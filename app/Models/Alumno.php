@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// Relations
+use App\Models\Grupo;
+use App\Models\PackClase;
+use App\Models\SolicitudMateria;
+
+
 class Alumno extends Model
 {
     use HasFactory;
@@ -41,6 +47,21 @@ class Alumno extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function grupos()
+    {
+        return $this->belongsToMany(Grupo::class, 'alumno_grupo')->withTimestamps();
+    }
+
+    public function packsClases()
+    {
+        return $this->hasMany(PackClase::class);
+    }
+
+    public function solicitudesMaterias()
+    {
+        return $this->hasMany(SolicitudMateria::class);
     }
 
     /**

@@ -5,6 +5,11 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AulaController;
+use App\Http\Controllers\InstitucionController;
+use App\Http\Controllers\NivelController;
+use App\Http\Controllers\SolicitudMateriaController;
+use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\TemaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +34,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('docentes/{docente}/assign-user', [DocenteController::class, 'assignUser']);
 
         Route::apiResource('materias', MateriaController::class);
+        // Aulas
         Route::apiResource('aulas', AulaController::class);
+
+        // Agrupamientos y Grupos
+        Route::apiResource('temas', TemaController::class);
+        Route::apiResource('solicitudes-materias', SolicitudMateriaController::class);
+        Route::patch('solicitudes-materias/{solicitud}/estado', [SolicitudMateriaController::class, 'updateEstado']);
+        Route::apiResource('grupos', GrupoController::class);
+        Route::post('grupos/{grupo}/add-alumno', [GrupoController::class, 'addAlumno']);
+        Route::apiResource('instituciones', InstitucionController::class);
+        Route::apiResource('niveles', NivelController::class);
     });
 });
