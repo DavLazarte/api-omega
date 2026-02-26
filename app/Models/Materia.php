@@ -14,6 +14,7 @@ class Materia extends Model
     protected $fillable = [
         'nombre',
         'nivel', // Keeping for legacy/transition
+        'anio',
         'duracion_minutos',
         'institucion_id',
         'nivel_id',

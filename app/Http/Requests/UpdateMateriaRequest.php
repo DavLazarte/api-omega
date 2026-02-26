@@ -17,6 +17,7 @@ class UpdateMateriaRequest extends FormRequest
 
         return [
             'nombre' => 'sometimes|required|string|max:255',
+            'anio' => 'nullable|string|max:255',
             'institucion_id' => 'sometimes|required|exists:instituciones,id',
             'nivel_id' => 'sometimes|required|exists:niveles,id',
             'duracion_minutos' => 'sometimes|required|integer|min:1',

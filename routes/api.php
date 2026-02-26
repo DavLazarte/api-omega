@@ -39,11 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Agrupamientos y Grupos
         Route::apiResource('temas', TemaController::class);
-        Route::apiResource('solicitudes-materias', SolicitudMateriaController::class);
+        Route::apiResource('solicitudes-materias', SolicitudMateriaController::class)->parameters(['solicitudes-materias' => 'solicitud']);
         Route::patch('solicitudes-materias/{solicitud}/estado', [SolicitudMateriaController::class, 'updateEstado']);
         Route::apiResource('grupos', GrupoController::class);
         Route::post('grupos/{grupo}/add-alumno', [GrupoController::class, 'addAlumno']);
-        Route::apiResource('instituciones', InstitucionController::class);
-        Route::apiResource('niveles', NivelController::class);
+        Route::apiResource('instituciones', InstitucionController::class)->parameters(['instituciones' => 'institucion']);
+        Route::apiResource('niveles', NivelController::class)->parameters(['niveles' => 'nivel']);
     });
 });

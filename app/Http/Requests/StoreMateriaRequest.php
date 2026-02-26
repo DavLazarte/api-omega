@@ -15,6 +15,7 @@ class StoreMateriaRequest extends FormRequest
     {
         return [
             'nombre' => 'required|string|max:255',
+            'anio' => 'nullable|string|max:255',
             'institucion_id' => 'required|exists:instituciones,id',
             'nivel_id' => 'required|exists:niveles,id',
             'duracion_minutos' => 'required|integer|min:1',

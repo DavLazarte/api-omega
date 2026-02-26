@@ -27,7 +27,8 @@ class UpdateAlumnoRequest extends FormRequest
 
         return [
             'nombre' => 'sometimes|required|string|max:255',
-            'telefono' => 'sometimes|required|string|unique:alumnos,telefono,' . $alumnoId,
+            'telefono' => 'sometimes|required|string',
+            'telefono_secundario' => 'nullable|string',
             'email' => [
                 'nullable',
                 'email',
@@ -49,7 +50,6 @@ class UpdateAlumnoRequest extends FormRequest
         return [
             'nombre.required' => 'El nombre es obligatorio.',
             'telefono.required' => 'El teléfono es obligatorio.',
-            'telefono.unique' => 'Este teléfono ya está registrado.',
             'email.email' => 'El formato del correo electrónico no es válido.',
             'email.unique' => 'Este correo electrónico ya está registrado.',
             'estado.required' => 'El estado es obligatorio.',

@@ -23,7 +23,8 @@ class StoreAlumnoRequest extends FormRequest
     {
         return [
             'nombre' => 'required|string|max:255',
-            'telefono' => 'required|string|unique:alumnos,telefono',
+            'telefono' => 'required|string',
+            'telefono_secundario' => 'nullable|string',
             'email' => 'nullable|email|unique:alumnos,email|unique:users,email',
             'estado' => 'required|in:activo,suspendido,bloqueado',
             'saldo_clases' => 'nullable|integer',
@@ -41,7 +42,6 @@ class StoreAlumnoRequest extends FormRequest
         return [
             'nombre.required' => 'El nombre es obligatorio.',
             'telefono.required' => 'El teléfono es obligatorio.',
-            'telefono.unique' => 'Este teléfono ya está registrado.',
             'email.email' => 'El formato del correo electrónico no es válido.',
             'email.unique' => 'Este correo electrónico ya está registrado.',
             'estado.required' => 'El estado es obligatorio.',

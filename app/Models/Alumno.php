@@ -23,6 +23,7 @@ class Alumno extends Model
     protected $fillable = [
         'nombre',
         'telefono',
+        'telefono_secundario',
         'email',
         'estado',
         'saldo_clases',
