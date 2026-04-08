@@ -13,25 +13,22 @@ class Materia extends Model
 
     protected $fillable = [
         'nombre',
-        'nivel', // Keeping for legacy/transition
-        'anio',
+        'anios',
         'duracion_minutos',
-        'institucion_id',
-        'nivel_id',
     ];
 
-    public function institucion()
+    protected $casts = [
+        'anios' => 'array',
+    ];
+
+    public function instituciones()
     {
-        return $this->belongsTo(Institucion::class);
+        return $this->belongsToMany(Institucion::class);
     }
 
-    public function academicLevel()
+    public function niveles()
     {
-        return $this->belongsTo(Nivel::class, 'nivel_id');
+        return $this->belongsToMany(Nivel::class, 'materia_nivel');
     }
-
-    /**
-     * Optional: Define relationships if needed in the future
-     * e.g., to Docentes or Inscriptions
-     */
 }
+

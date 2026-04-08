@@ -78,7 +78,7 @@ class AlumnoController extends Controller
         $alumno->load([
             'user',
             'grupos' => function ($q) {
-                $q->with(['materia.institucion', 'docente', 'aula'])
+                $q->with(['materia.instituciones', 'materia.niveles', 'docente', 'aula'])
                     ->orderBy('fecha', 'desc');
             },
             'packsClases' => function ($q) {

@@ -18,6 +18,6 @@ class Nivel extends Model
 
     public function materias()
     {
-        return $this->hasMany(Materia::class);
+        return $this->belongsToMany(Materia::class, 'materia_nivel');
     }
 }

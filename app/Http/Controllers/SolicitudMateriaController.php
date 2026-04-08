@@ -10,7 +10,7 @@ class SolicitudMateriaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SolicitudMateria::with(['alumno', 'materia.institucion', 'materia.academicLevel', 'tema'])
+        $query = SolicitudMateria::with(['alumno', 'materia.instituciones', 'materia.niveles', 'tema'])
             ->where('estado', 'pendiente');
 
         if ($request->has('materia_id')) {

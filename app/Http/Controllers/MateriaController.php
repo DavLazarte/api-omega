@@ -11,14 +11,17 @@ class MateriaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Materia::with(['institucion', 'academicLevel']);
+        $query = Materia::with(['instituciones', 'niveles']);
 
         if ($request->has('search')) {
             $query->where('nombre', 'like', "%{$request->search}%");
         }
 
         if ($request->has('nivel') && $request->nivel !== 'todos') {
-            $query->where('nivel', $request->nivel);
+            $query->whereHas('niveles', function ($q) use ($request) {
+                // Compatibility for string or ID
+                $q->where('niveles.id', $request->nivel)->orWhere('niveles.nombre', $request->nivel);
+            });
         }
 
         // Si se pide una lista simple sin paginación (para selectores)
@@ -33,15 +36,20 @@ class MateriaController extends Controller
     {
         $data = $request->validated();
 
-        // Sync legacy nivel field for backward compatibility
-        if (isset($data['nivel_id'])) {
-            $nivel = \App\Models\Nivel::find($data['nivel_id']);
-            if ($nivel) {
-                $data['nivel'] = $nivel->nombre;
-            }
+        $materia = Materia::create([
+            'nombre' => $data['nombre'],
+            'anios' => $data['anios'] ?? null,
+            'duracion_minutos' => $data['duracion_minutos'],
+        ]);
+
+        if (isset($data['instituciones'])) {
+            $materia->instituciones()->sync($data['instituciones']);
+        }
+        if (isset($data['niveles'])) {
+            $materia->niveles()->sync($data['niveles']);
         }
 
-        $materia = Materia::create($data);
+        $materia->load(['instituciones', 'niveles']);
 
         return response()->json([
             'message' => 'Materia creada exitosamente',
@@ -51,6 +59,7 @@ class MateriaController extends Controller
 
     public function show(Materia $materia)
     {
+        $materia->load(['instituciones', 'niveles']);
         return response()->json($materia);
     }
 
@@ -58,15 +67,23 @@ class MateriaController extends Controller
     {
         $data = $request->validated();
 
-        // Sync legacy nivel field for backward compatibility
-        if (isset($data['nivel_id'])) {
-            $nivel = \App\Models\Nivel::find($data['nivel_id']);
-            if ($nivel) {
-                $data['nivel'] = $nivel->nombre;
-            }
+        $updateData = [];
+        if (isset($data['nombre'])) $updateData['nombre'] = $data['nombre'];
+        if (array_key_exists('anios', $data)) $updateData['anios'] = $data['anios'];
+        if (isset($data['duracion_minutos'])) $updateData['duracion_minutos'] = $data['duracion_minutos'];
+
+        if (!empty($updateData)) {
+            $materia->update($updateData);
         }
 
-        $materia->update($data);
+        if (isset($data['instituciones'])) {
+            $materia->instituciones()->sync($data['instituciones']);
+        }
+        if (isset($data['niveles'])) {
+            $materia->niveles()->sync($data['niveles']);
+        }
+
+        $materia->load(['instituciones', 'niveles']);
 
         return response()->json([
             'message' => 'Materia actualizada exitosamente',

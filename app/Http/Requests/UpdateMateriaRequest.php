@@ -13,13 +13,14 @@ class UpdateMateriaRequest extends FormRequest
 
     public function rules(): array
     {
-        $materiaId = $this->route('materia')->id;
-
         return [
             'nombre' => 'sometimes|required|string|max:255',
-            'anio' => 'nullable|string|max:255',
-            'institucion_id' => 'sometimes|required|exists:instituciones,id',
-            'nivel_id' => 'sometimes|required|exists:niveles,id',
+            'anios' => 'nullable|array',
+            'anios.*' => 'string|max:255',
+            'instituciones' => 'sometimes|required|array|min:1',
+            'instituciones.*' => 'exists:instituciones,id',
+            'niveles' => 'sometimes|required|array|min:1',
+            'niveles.*' => 'exists:niveles,id',
             'duracion_minutos' => 'sometimes|required|integer|min:1',
         ];
     }
@@ -28,12 +29,15 @@ class UpdateMateriaRequest extends FormRequest
     {
         return [
             'nombre.required' => 'El nombre es obligatorio.',
-            'institucion_id.required' => 'La institución es obligatoria.',
-            'institucion_id.exists' => 'La institución seleccionada no es válida.',
-            'nivel_id.required' => 'El nivel académico es obligatorio.',
-            'nivel_id.exists' => 'El nivel seleccionado no es válido.',
+            'instituciones.required' => 'Debes seleccionar al menos una institución.',
+            'instituciones.min' => 'Debes seleccionar al menos una institución.',
+            'instituciones.*.exists' => 'Una de las instituciones seleccionadas no es válida.',
+            'niveles.required' => 'Debes seleccionar al menos un nivel académico.',
+            'niveles.min' => 'Debes seleccionar al menos un nivel académico.',
+            'niveles.*.exists' => 'Uno de los niveles seleccionados no es válido.',
             'duracion_minutos.required' => 'La duración es obligatoria.',
             'duracion_minutos.min' => 'La duración debe ser mayor a 0.',
         ];
     }
 }
+

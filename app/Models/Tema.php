@@ -10,17 +10,5 @@ class Tema extends Model
 {
     protected $fillable = [
         'nombre',
-        'nivel_id',
-        'institucion_id',
     ];
-
-    public function nivel()
-    {
-        return $this->belongsTo(Nivel::class);
-    }
-
-    public function institucion()
-    {
-        return $this->belongsTo(Institucion::class);
-    }
 }
