@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Materia;
 use App\Models\User;
+use App\Models\DocenteDisponibilidad;
 
 class Docente extends Model
 {
@@ -52,5 +53,23 @@ class Docente extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Disponibilidades puntuales del docente
+     */
+    public function disponibilidades()
+    {
+        return $this->hasMany(DocenteDisponibilidad::class);
+    }
+
+    /**
+     * Disponibilidades activas de hoy
+     */
+    public function disponibilidadesHoy()
+    {
+        return $this->hasMany(DocenteDisponibilidad::class)
+                    ->whereDate('fecha', today())
+                    ->where('activo', true);
     }
 }
