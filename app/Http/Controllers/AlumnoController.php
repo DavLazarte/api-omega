@@ -82,7 +82,9 @@ class AlumnoController extends Controller
                     ->orderBy('fecha', 'desc');
             },
             'packsClases' => function ($q) {
-                $q->orderBy('created_at', 'desc');
+                $q->with(['packCatalogo', 'abonos'])
+                  ->whereNull('pack_origen_id')  // Solo packs origen en el perfil
+                  ->orderBy('created_at', 'desc');
             },
             'solicitudesMaterias' => function ($q) {
                 $q->with(['materia', 'tema'])

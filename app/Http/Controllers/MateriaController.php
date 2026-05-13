@@ -39,6 +39,8 @@ class MateriaController extends Controller
         $materia = Materia::create([
             'nombre' => $data['nombre'],
             'anios' => $data['anios'] ?? null,
+            'carreras' => $data['carreras'] ?? null,
+            'contenidos' => $data['contenidos'] ?? null,
             'duracion_minutos' => $data['duracion_minutos'],
         ]);
 
@@ -70,6 +72,8 @@ class MateriaController extends Controller
         $updateData = [];
         if (isset($data['nombre'])) $updateData['nombre'] = $data['nombre'];
         if (array_key_exists('anios', $data)) $updateData['anios'] = $data['anios'];
+        if (array_key_exists('carreras', $data)) $updateData['carreras'] = $data['carreras'];
+        if (array_key_exists('contenidos', $data)) $updateData['contenidos'] = $data['contenidos'];
         if (isset($data['duracion_minutos'])) $updateData['duracion_minutos'] = $data['duracion_minutos'];
 
         if (!empty($updateData)) {

@@ -15,10 +15,14 @@ class Materia extends Model
         'nombre',
         'anios',
         'duracion_minutos',
+        'carreras',
+        'contenidos',
     ];
 
     protected $casts = [
         'anios' => 'array',
+        'carreras' => 'array',
+        'contenidos' => 'array',
     ];
 
     public function instituciones()

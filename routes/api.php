@@ -75,9 +75,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('pack-catalogos/{packCatalogo}', [PackCatalogoController::class, 'update']);
         Route::delete('pack-catalogos/{packCatalogo}', [PackCatalogoController::class, 'destroy']);
 
-        // Validación de pagos: solo admin
+        // Validación y gestión de pagos: solo admin
         Route::patch('packs-clases/{pack}/validar', [PackClaseController::class, 'validar']);
         Route::patch('packs-clases/{pack}/rechazar', [PackClaseController::class, 'rechazar']);
+        Route::post('packs-clases/{pack}/pagar-deuda', [PackClaseController::class, 'pagarDeuda']);
 
         // Disponibilidad de docentes: escritura solo admin
         Route::post('docentes-disponibilidad', [DocenteDisponibilidadController::class, 'store']);
