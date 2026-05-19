@@ -45,4 +45,9 @@ class Grupo extends Model
     {
         return $this->belongsToMany(Alumno::class, 'alumno_grupo')->withTimestamps();
     }
+
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class);
+    }
 }

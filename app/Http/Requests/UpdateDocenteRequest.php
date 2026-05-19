@@ -25,7 +25,7 @@ class UpdateDocenteRequest extends FormRequest
 
         return [
             'nombre' => 'sometimes|required|string|max:255',
-            'email' => 'nullable|email|unique:docentes,email,' . $docenteId . '|unique:users,email',
+            'email' => 'nullable|email|unique:docentes,email,' . $docenteId . ($this->route('docente')->user_id ? '|unique:users,email,' . $this->route('docente')->user_id : '|unique:users,email'),
             'materias' => 'nullable|array',
             'materia_ids' => 'nullable|array',
             'materia_ids.*' => 'integer|exists:materias,id',

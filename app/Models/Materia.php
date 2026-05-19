@@ -13,6 +13,7 @@ class Materia extends Model
 
     protected $fillable = [
         'nombre',
+        'activo',
         'anios',
         'duracion_minutos',
         'carreras',
@@ -20,6 +21,7 @@ class Materia extends Model
     ];
 
     protected $casts = [
+        'activo' => 'boolean',
         'anios' => 'array',
         'carreras' => 'array',
         'contenidos' => 'array',

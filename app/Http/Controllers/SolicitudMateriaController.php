@@ -17,6 +17,13 @@ class SolicitudMateriaController extends Controller
             $query->where('materia_id', $request->materia_id);
         }
 
+        // Si el usuario es docente, solo ve solicitudes de sus propias materias
+        $user = $request->user();
+        if ($user && $user->role === 'docente' && $user->docente) {
+            $materiasDelDocente = $user->docente->subjects()->pluck('materias.id')->toArray();
+            $query->whereIn('materia_id', $materiasDelDocente);
+        }
+
         return response()->json($query->orderBy('created_at', 'desc')->get());
     }
 

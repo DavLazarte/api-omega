@@ -22,6 +22,10 @@ class PackClaseController extends Controller
             $query->where('alumno_id', $request->alumno_id);
         }
 
+        if ($request->has('cargado_por')) {
+            $query->where('cargado_por', $request->cargado_por);
+        }
+
         if ($request->has('desde')) {
             $query->whereDate('fecha_pago_informado', '>=', $request->desde);
         }

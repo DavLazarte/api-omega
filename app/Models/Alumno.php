@@ -56,6 +56,11 @@ class Alumno extends Model
         return $this->belongsToMany(Grupo::class, 'alumno_grupo')->withTimestamps();
     }
 
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class);
+    }
+
     public function packsClases()
     {
         return $this->hasMany(PackClase::class);
