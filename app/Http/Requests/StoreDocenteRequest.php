@@ -29,6 +29,7 @@ class StoreDocenteRequest extends FormRequest
             'materia_ids.*' => 'integer|exists:materias,id',
             'disponibilidad_semanal' => 'nullable|array',
             'estado' => 'required|in:activo,inactivo',
+            'tipo_contrato' => 'nullable|string|in:sueldo_fijo,por_dia,por_hora,temporal',
             'crear_usuario' => 'nullable|boolean',
         ];
     }

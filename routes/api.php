@@ -59,9 +59,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── Lectura compartida admin y docentes ──────────────────────────
     Route::middleware('role:admin,docente')->group(function () {
-        // Alumnos y docentes (lectura)
+        // Alumnos y docentes (lectura, creación y edición de alumnos)
         Route::get('alumnos', [AlumnoController::class, 'index']);
         Route::get('alumnos/{alumno}', [AlumnoController::class, 'show']);
+        Route::post('alumnos', [AlumnoController::class, 'store']);
+        Route::match(['put', 'patch'], 'alumnos/{alumno}', [AlumnoController::class, 'update']);
+        Route::post('alumnos/{alumno}/assign-user', [AlumnoController::class, 'assignUser']);
+        
         Route::get('docentes', [DocenteController::class, 'index']);
         Route::get('docentes/{docente}', [DocenteController::class, 'show']);
         
@@ -73,14 +77,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('instituciones', [InstitucionController::class, 'index']);
         Route::get('niveles', [NivelController::class, 'index']);
         
-        // Agrupamiento (lectura)
+        // Agrupamiento
         Route::get('temas', [TemaController::class, 'index']);
+        Route::post('temas', [TemaController::class, 'store']);
         Route::get('solicitudes-materias', [SolicitudMateriaController::class, 'index']);
+        Route::post('solicitudes-materias', [SolicitudMateriaController::class, 'store']);
+        Route::delete('solicitudes-materias/{solicitud}', [SolicitudMateriaController::class, 'destroy']);
         
-        // Grupos (lectura y creación para Renovar Grupo)
+        // Grupos
         Route::get('grupos', [GrupoController::class, 'index']);
         Route::get('grupos/{grupo}', [GrupoController::class, 'show']);
         Route::post('grupos', [GrupoController::class, 'store']);
+        Route::match(['put', 'patch'], 'grupos/{grupo}', [GrupoController::class, 'update']);
+        Route::post('grupos/{grupo}/add-alumno', [GrupoController::class, 'addAlumno']);
 
         // Registrar abonos sobre deudas existentes
         Route::post('packs-clases/{pack}/pagar-deuda', [PackClaseController::class, 'pagarDeuda']);
@@ -88,8 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── Solo admin ───────────────────────────────────────────────────
     Route::middleware('role:admin')->group(function () {
-        Route::apiResource('alumnos', AlumnoController::class)->except(['index', 'show']);
-        Route::post('alumnos/{alumno}/assign-user', [AlumnoController::class, 'assignUser']);
+        Route::delete('alumnos/{alumno}', [AlumnoController::class, 'destroy']);
 
         Route::apiResource('docentes', DocenteController::class)->except(['index', 'show']);
         Route::post('docentes/{docente}/assign-user', [DocenteController::class, 'assignUser']);
@@ -98,13 +106,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('aulas', AulaController::class)->except(['index', 'show']);
 
         // Agrupamientos y Grupos
-        Route::apiResource('temas', TemaController::class)->except(['index', 'show']);
+        Route::apiResource('temas', TemaController::class)->except(['index', 'show', 'store']);
         Route::apiResource('solicitudes-materias', SolicitudMateriaController::class)
             ->parameters(['solicitudes-materias' => 'solicitud'])
-            ->except(['index']);
+            ->except(['index', 'store', 'destroy']);
         Route::patch('solicitudes-materias/{solicitud}/estado', [SolicitudMateriaController::class, 'updateEstado']);
-        Route::apiResource('grupos', GrupoController::class)->except(['index', 'show', 'store']);
-        Route::post('grupos/{grupo}/add-alumno', [GrupoController::class, 'addAlumno']);
+        Route::apiResource('grupos', GrupoController::class)->except(['index', 'show', 'store', 'update']);
 
         Route::apiResource('instituciones', InstitucionController::class)
             ->parameters(['instituciones' => 'institucion'])

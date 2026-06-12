@@ -23,6 +23,7 @@ class Docente extends Model
         'materias',
         'disponibilidad_semanal',
         'estado',
+        'tipo_contrato',
         'user_id',
     ];
 
