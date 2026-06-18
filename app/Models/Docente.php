@@ -24,6 +24,7 @@ class Docente extends Model
         'disponibilidad_semanal',
         'estado',
         'tipo_contrato',
+        'valor_contrato',
         'user_id',
     ];
 
@@ -72,5 +73,13 @@ class Docente extends Model
         return $this->hasMany(DocenteDisponibilidad::class)
                     ->whereDate('fecha', today())
                     ->where('activo', true);
+    }
+
+    /**
+     * Egresos/pagos realizados al docente
+     */
+    public function egresos()
+    {
+        return $this->hasMany(Egreso::class);
     }
 }

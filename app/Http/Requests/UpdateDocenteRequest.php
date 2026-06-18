@@ -32,6 +32,7 @@ class UpdateDocenteRequest extends FormRequest
             'disponibilidad_semanal' => 'nullable|array',
             'estado' => 'sometimes|required|in:activo,inactivo',
             'tipo_contrato' => 'nullable|string|in:sueldo_fijo,por_dia,por_hora,temporal',
+            'valor_contrato' => 'nullable|numeric|min:0',
         ];
     }
 

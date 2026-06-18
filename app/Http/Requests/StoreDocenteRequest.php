@@ -30,6 +30,7 @@ class StoreDocenteRequest extends FormRequest
             'disponibilidad_semanal' => 'nullable|array',
             'estado' => 'required|in:activo,inactivo',
             'tipo_contrato' => 'nullable|string|in:sueldo_fijo,por_dia,por_hora,temporal',
+            'valor_contrato' => 'nullable|numeric|min:0',
             'crear_usuario' => 'nullable|boolean',
         ];
     }

@@ -16,6 +16,7 @@ use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\DocenteDisponibilidadController;
 use App\Http\Controllers\AlumnoPortalController;
 use App\Http\Controllers\DocentePortalController;
+use App\Http\Controllers\EgresoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -138,6 +139,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Configuracion: escritura solo admin
         Route::put('configuracion', [ConfiguracionController::class, 'update']);
+
+        // Módulo de Finanzas y Egresos (solo admin)
+        Route::apiResource('egresos', EgresoController::class);
+        Route::get('finanzas/reporte', [EgresoController::class, 'reporte']);
+        Route::get('docentes/{docente}/liquidacion', [EgresoController::class, 'liquidacion']);
     });
 });
 
