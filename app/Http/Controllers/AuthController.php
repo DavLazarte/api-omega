@@ -23,7 +23,6 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->tokens()->where('name', 'auth-token')->delete();
 
         // Create new token
         $token = $user->createToken('auth-token')->plainTextToken;
