@@ -20,12 +20,16 @@ class DocentePortalController extends Controller
         // En el futuro, sacar el $id del Auth::user()->docente->id
         $docente = Docente::findOrFail($id);
 
-        $hoy = Carbon::today()->toDateString();
-        $semana_que_viene = Carbon::today()->addDays(7)->toDateString();
+        $hoy = $request->query('start', Carbon::today()->toDateString());
+        $semana_que_viene = $request->query('end', Carbon::today()->addDays(7)->toDateString());
 
         $grupos = Grupo::with(['materia', 'aula', 'alumnos' => function ($q) {
-                // Solo necesitamos datos básicos y el saldo del alumno
-                $q->select('alumnos.id', 'alumnos.nombre', 'alumnos.saldo_clases');
+                // Solo necesitamos datos básicos, el saldo del alumno y sus packs para calcular deuda
+                $q->select('alumnos.id', 'alumnos.nombre', 'alumnos.saldo_clases')
+                  ->with(['packsClases' => function($q2) {
+                      $q2->whereNull('pack_origen_id')
+                         ->where('estado', '!=', 'rechazado');
+                  }]);
             }])
             ->where('docente_id', $docente->id)
             ->where('estado', 'activo')

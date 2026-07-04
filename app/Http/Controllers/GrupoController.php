@@ -17,6 +17,10 @@ class GrupoController extends Controller
         if ($request->has('fecha')) {
             $query->where('fecha', $request->fecha);
         }
+        
+        if ($request->has('start') && $request->has('end')) {
+            $query->whereBetween('fecha', [$request->start, $request->end]);
+        }
 
         $grupos = $query->orderBy('created_at', 'desc')->get();
 

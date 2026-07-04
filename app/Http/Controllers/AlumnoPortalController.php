@@ -13,7 +13,7 @@ class AlumnoPortalController extends Controller
 {
     public function dashboard(Request $request, $id)
     {
-        $alumno = Alumno::findOrFail($id);
+        $alumno = Alumno::with(['solicitudesMaterias.materia', 'solicitudesMaterias.tema'])->findOrFail($id);
 
         // Último pack comprado
         $ultimoPack = PackClase::with('packCatalogo')
@@ -27,6 +27,7 @@ class AlumnoPortalController extends Controller
                 'id' => $alumno->id,
                 'nombre' => $alumno->nombre,
                 'saldo_clases' => $alumno->saldo_clases,
+                'solicitudes_materias' => $alumno->solicitudesMaterias,
             ],
             'ultimo_pack' => $ultimoPack
         ]);
@@ -64,9 +65,9 @@ class AlumnoPortalController extends Controller
             ->map(function ($asis) {
                 return [
                     'id' => $asis->id,
-                    'fecha' => $asis->grupo->fecha ?? null,
-                    'materia' => $asis->grupo->materia->nombre ?? 'N/A',
-                    'docente' => $asis->docente->nombre ?? 'N/A',
+                    'fecha' => $asis->grupo?->fecha ?? null,
+                    'materia' => $asis->grupo?->materia?->nombre ?? 'N/A',
+                    'docente' => $asis->docente?->nombre ?? $asis->docente?->alias ?? 'N/A',
                     'estado' => $asis->estado,
                     'descuenta_clase' => $asis->descuenta_clase,
                 ];

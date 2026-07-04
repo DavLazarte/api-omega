@@ -17,6 +17,7 @@ use App\Http\Controllers\DocenteDisponibilidadController;
 use App\Http\Controllers\AlumnoPortalController;
 use App\Http\Controllers\DocentePortalController;
 use App\Http\Controllers\EgresoController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me/password', [AuthController::class, 'updatePassword']);
 
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -58,6 +60,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('docentes-disponibilidad', [DocenteDisponibilidadController::class, 'index']);
     Route::get('docentes-disponibles-hoy', [DocenteDisponibilidadController::class, 'disponiblesHoy']);
 
+    // ── Recursos compartidos para admin, docente y alumno ────────────
+    Route::get('materias', [MateriaController::class, 'index']);
+    Route::get('materias/{materia}', [MateriaController::class, 'show']);
+    Route::get('temas', [TemaController::class, 'index']);
+    Route::get('solicitudes-materias', [SolicitudMateriaController::class, 'index']);
+    Route::post('solicitudes-materias', [SolicitudMateriaController::class, 'store']);
+    Route::delete('solicitudes-materias/{solicitud}', [SolicitudMateriaController::class, 'destroy']);
+
     // ── Lectura compartida admin y docentes ──────────────────────────
     Route::middleware('role:admin,docente')->group(function () {
         // Alumnos y docentes (lectura, creación y edición de alumnos)
@@ -69,21 +79,14 @@ Route::middleware('auth:sanctum')->group(function () {
         
         Route::get('docentes', [DocenteController::class, 'index']);
         Route::get('docentes/{docente}', [DocenteController::class, 'show']);
-        
-        // Materias, Aulas, Instituciones, Niveles (lectura)
-        Route::get('materias', [MateriaController::class, 'index']);
-        Route::get('materias/{materia}', [MateriaController::class, 'show']);
+        // Aulas, Instituciones, Niveles (lectura)
         Route::get('aulas', [AulaController::class, 'index']);
         Route::get('aulas/{aula}', [AulaController::class, 'show']);
         Route::get('instituciones', [InstitucionController::class, 'index']);
         Route::get('niveles', [NivelController::class, 'index']);
         
-        // Agrupamiento
-        Route::get('temas', [TemaController::class, 'index']);
+        // Agrupamiento (temas store)
         Route::post('temas', [TemaController::class, 'store']);
-        Route::get('solicitudes-materias', [SolicitudMateriaController::class, 'index']);
-        Route::post('solicitudes-materias', [SolicitudMateriaController::class, 'store']);
-        Route::delete('solicitudes-materias/{solicitud}', [SolicitudMateriaController::class, 'destroy']);
         
         // Grupos
         Route::get('grupos', [GrupoController::class, 'index']);
@@ -98,6 +101,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ── Solo admin ───────────────────────────────────────────────────
     Route::middleware('role:admin')->group(function () {
+        // Gestión de usuarios
+        Route::apiResource('users', UserController::class)->except(['show']);
+        Route::patch('users/{user}/reset-password', [UserController::class, 'resetPassword']);
+
         Route::delete('alumnos/{alumno}', [AlumnoController::class, 'destroy']);
 
         Route::apiResource('docentes', DocenteController::class)->except(['index', 'show']);
