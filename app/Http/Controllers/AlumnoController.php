@@ -34,6 +34,11 @@ class AlumnoController extends Controller
             $query->where('estado', $request->estado);
         }
 
+        // Filtro por saldo positivo
+        if ($request->boolean('con_saldo')) {
+            $query->where('saldo_clases', '>', 0);
+        }
+
         if ($request->boolean('all')) {
             return response()->json($query->get());
         }
